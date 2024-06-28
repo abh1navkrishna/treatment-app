@@ -31,6 +31,8 @@ class _RegisterPatientPageState extends State<RegisterPatientPage> {
       TextEditingController();
   final TextEditingController _balanceAmountController =
       TextEditingController();
+  final TextEditingController _timeHour = TextEditingController();
+  final TextEditingController _timeMinutes = TextEditingController();
   String? _selectedBranch;
   String? _selectedLocation;
   List<String> _selectedMaleTreatments = [];
@@ -68,10 +70,13 @@ class _RegisterPatientPageState extends State<RegisterPatientPage> {
             'payment': _paymentController.text,
             'phone': _phoneController.text,
             'address': _addressController.text,
-            'total_amount': double.parse(_totalAmountController.text),
-            'discount_amount': double.parse(_discountAmountController.text),
-            'advance_amount': double.parse(_advanceAmountController.text),
-            'balance_amount': double.parse(_balanceAmountController.text),
+            'total_amount': double.tryParse(_totalAmountController.text) ?? 0.0,
+            'discount_amount':
+                double.tryParse(_discountAmountController.text) ?? 0.0,
+            'advance_amount':
+                double.tryParse(_advanceAmountController.text) ?? 0.0,
+            'balance_amount':
+                double.tryParse(_balanceAmountController.text) ?? 0.0,
             'date_nd_time': DateTime.now().toIso8601String(),
             'id': '',
             'male': _selectedMaleTreatments.join(','),
@@ -674,7 +679,39 @@ class _RegisterPatientPageState extends State<RegisterPatientPage> {
                 SizedBox(
                   height: 20,
                 ),
-                SizedBox(height: 20),
+                AppText(
+                    text: 'Treatment Datet',
+                    size: 16,
+                    weight: FontWeight.w400,
+                    textcolor: grayblack),
+                SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppTextForm(
+                          hintText: 'Hour',
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter Time';
+                            }
+                            return null;
+                          },
+                          controller: _timeHour),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(
+                      child: AppTextForm(
+                          hintText: 'Minutes',
+                          validator: null,
+                          controller: _timeMinutes),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 40),
                 _isLoading
                     ? Center(child: CircularProgressIndicator())
                     : GestureDetector(
@@ -687,7 +724,8 @@ class _RegisterPatientPageState extends State<RegisterPatientPage> {
                               fontWeight: FontWeight.w600,
                               color: white),
                         )),
-                      )
+                      ),
+                SizedBox(height: 40),
               ],
             ),
           ),
